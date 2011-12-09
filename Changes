@@ -1,3 +1,6 @@
+0.03 Fri Dec  9 2011 Pavel Shaydo <zwon@cpan.org>
+    * Fix tests on Solaris
+
 0.02 Sat Dec  3 2011 Pavel Shaydo <zwon@cpan.org>
     * Add 'parent' to dependencies
 
