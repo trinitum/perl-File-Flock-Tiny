@@ -9,19 +9,27 @@ use Fcntl qw(:flock);
 use Time::HiRes qw(usleep);
 use File::Slurp;
 
-my $dir = File::Temp->newdir;
-my $file = file( $dir, 'test' );
+my $SOLARIS = $^O eq 'solaris';
+
+my $dir     = File::Temp->newdir;
+my $file    = file( $dir, 'test' );
 my $content = <<EOT;
 Content of this file must remain
 unchanged by the end of the test.
 EOT
-write_file($file, $content);
+write_file( $file, $content );
 
 sub locked {
-    my $fh = $file->open(">>");
-    my $locked = flock $fh, LOCK_EX | LOCK_NB;
-    flock $fh, LOCK_UN;
-    return ! $locked;
+    if ($SOLARIS) {
+        system( $^X, "-e", "open my \$fh, '>>', '$file'; flock(\$fh, 6) ? exit 0:exit 1" );
+        return $? ? 1 : 0;
+    }
+    else {
+        my $fh = $file->open(">>");
+        my $locked = flock $fh, LOCK_EX | LOCK_NB;
+        flock $fh, LOCK_UN;
+        return !$locked;
+    }
 }
 
 sub ok_locked {
@@ -38,8 +46,13 @@ subtest "Basic locking by name" => sub {
     ok $lock,     "Got lock";
     isa_ok $lock, "File::Flock::Tiny::Lock";
     ok_locked;
-    my $try = File::Flock::Tiny->trylock($file);
-    ok !$try, "trylock returned false";
+    unless ($SOLARIS) {
+
+        # in solaris I need to fork, in the same process
+        # locking will succeed
+        my $try = File::Flock::Tiny->trylock($file);
+        ok !$try, "trylock returned false";
+    }
     $lock->release;
     ok_not_locked;
     ok( File::Flock::Tiny->trylock($file), "trylock returned true" );
@@ -78,11 +91,14 @@ subtest "Unlocking on out of scope" => sub {
 };
 
 subtest "Unlocking with fork" => sub {
+    if ($SOLARIS) {
+        plan skip_all => "On Solaris flock won't survive fork";
+    }
     my $pid;
 
     {
         my $lock = File::Flock::Tiny->lock($file);
-        $pid  = fork;
+        $pid = fork;
         if ($pid) {
             usleep(100_000);
             ok !locked, "Child unlocked file";
@@ -94,7 +110,7 @@ subtest "Unlocking with fork" => sub {
 
     {
         my $lock = File::Flock::Tiny->lock($file);
-        $pid  = fork;
+        $pid = fork;
         if ($pid) {
             usleep(100_000);
             ok locked, "File still locked, because we closed it in child";
