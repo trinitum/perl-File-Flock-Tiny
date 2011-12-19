@@ -92,6 +92,30 @@ sub DESTROY {
     shift->release;
 }
 
+=head2 $lock->close
+
+Close locked filehandle, but do not release lock. Normally if you closed file
+it will be unlocked, but if you forked after locking file and closed lock in
+parent process, file will still be locked. Following example demonstrates the
+use for this method:
+
+    {
+        my $lock = File::Flock::Tiny->lock("lockfile");
+        my $pid = fork;
+        unless ( defined $pid ) {
+            do_something();
+        }
+        $lock->close;
+    }
+    # file still locked by child. Without $lock->close,
+    # it would be unlocked by parent when $lock got out
+    # of the scope
+
+Note, that this behaviour is not portable! It works on Linux and BSD, but on
+Solaris locks are not inherited by child processes, so file will be unlocked as
+soon as parent process will close it. See also description of flock in
+L<perlfunc>.
+
 =head1 AUTHOR
 
 Pavel Shaydo, C<< <zwon at cpan.org> >>
