@@ -13,7 +13,7 @@ File::Flock::Tiny - yet another flock package
 
 =cut
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 $VERSION = eval $VERSION;
 
 =head1 SYNOPSIS

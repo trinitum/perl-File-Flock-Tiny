@@ -1,3 +1,6 @@
+0.04 Mon Dec 19 2011 Pavel Shaydo <zwon@cpan.org>
+    * Document close method and behaviour on forking
+
 0.03 Fri Dec  9 2011 Pavel Shaydo <zwon@cpan.org>
     * Fix tests on Solaris
 
