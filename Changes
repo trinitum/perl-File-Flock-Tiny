@@ -1,3 +1,6 @@
+0.05 Tue Feb 14 2012 Pavel Shaydo <zwon@cpan.org>
+    * Add write_pid method
+
 0.04 Mon Dec 19 2011 Pavel Shaydo <zwon@cpan.org>
     * Document close method and behaviour on forking
 
