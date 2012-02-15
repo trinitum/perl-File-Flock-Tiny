@@ -13,7 +13,7 @@ File::Flock::Tiny - yet another flock package
 
 =cut
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 $VERSION = eval $VERSION;
 
 =head1 SYNOPSIS
@@ -143,6 +143,12 @@ Solaris locks are not inherited by child processes, so the file will be
 unlocked as soon as the parent process will close it. See also description of
 flock in L<perlfunc>.
 
+=cut
+
+1;
+
+__END__
+
 =head1 AUTHOR
 
 Pavel Shaydo, C<< <zwon at cpan.org> >>
@@ -161,7 +167,7 @@ don't like any of them.
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright 2011 Pavel Shaydo.
+Copyright 2011, 2012 Pavel Shaydo.
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
@@ -171,5 +177,3 @@ See http://dev.perl.org/licenses/ for more information.
 
 
 =cut
-
-1;

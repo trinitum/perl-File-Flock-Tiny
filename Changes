@@ -1,3 +1,8 @@
+0.06 Wed Feb 15 2012 Pavel Shaydo <zwon@cpan.org>
+    * Do not unlock pid file automatically in
+      child processes
+    * Improve documentation
+
 0.05 Tue Feb 14 2012 Pavel Shaydo <zwon@cpan.org>
     * Add write_pid method
 
