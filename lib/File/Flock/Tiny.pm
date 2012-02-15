@@ -72,8 +72,11 @@ sub trylock {
 
 =head2 File::Flock::Tiny->write_pid($file)
 
-Try to lock the file and save PID into it. Returns the lock object, or undef if
-file already locked.
+Try to lock the file and save the process ID into it. Returns the lock object,
+or undef if the file was already locked. The lock returned by I<write_pid> will
+be automatically released when the object goes out of the scope in the process
+that locked the pid file, in child processes you can release the lock
+explicitely.
 
 =cut
 
@@ -84,6 +87,7 @@ sub write_pid {
         $lock->truncate(0);
         $lock->print("$$\n");
         $lock->flush;
+        *$lock->{destroy_only_in} = $$;
     }
     return $lock;
 }
@@ -107,7 +111,10 @@ sub release {
 }
 
 sub DESTROY {
-    shift->release;
+    my $lock = shift;
+    unless ( *$lock->{destroy_only_in} && *$lock->{destroy_only_in} != $$ ) {
+        $lock->release;
+    }
 }
 
 =head2 $lock->close

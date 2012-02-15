@@ -127,21 +127,28 @@ is read_file($file), $content, "File not changed";
 subtest "PID file" => sub {
     my $pid_file = file( $dir, "test.pid" );
     my $pid = fork;
-    if ($pid==0) {
+    if ( $pid == 0 ) {
         $SIG{ALRM} = sub { exit 0 };
         alarm 10;
         my $lock = File::Flock::Tiny->write_pid($pid_file);
         sleep 10;
         exit 0;
     }
-    ok defined($pid), "successfully forked";
     usleep(200_000);
     ok !File::Flock::Tiny->write_pid($pid_file), "Pid file already exists and locked";
     my $data = read_file($pid_file);
     is $data, "$pid\n", "Pid file contains pid of the child process";
     kill KILL => $pid;
-    usleep(100_000);
-    ok( File::Flock::Tiny->write_pid($pid_file), "Successfully locked pid file" );
+    waitpid $pid, 0;
+    my $lock = File::Flock::Tiny->write_pid($pid_file);
+    ok $lock, "Successfully locked pid file";
+    $pid = fork;
+
+    if ( $pid == 0 ) {
+        exit 0;
+    }
+    waitpid $pid, 0;
+    ok !File::Flock::Tiny->write_pid($pid_file), "Pid file still locked after child exited";
 };
 
 done_testing;
