@@ -20,12 +20,14 @@ EOT
 write_file( $file, $content );
 
 sub locked {
+    my $fname = shift;
+    my $tfile = $fname ? file($fname) : $file;
     if ($SOLARIS) {
         system( $^X, "-e", "open my \$fh, '>>', '$file'; flock(\$fh, 6) ? exit 0:exit 1" );
         return $? ? 1 : 0;
     }
     else {
-        my $fh = $file->open(">>");
+        my $fh = $tfile->open(">>");
         my $locked = flock $fh, LOCK_EX | LOCK_NB;
         flock $fh, LOCK_UN;
         return !$locked;
@@ -148,7 +150,7 @@ subtest "PID file" => sub {
         exit 0;
     }
     waitpid $pid, 0;
-    ok !File::Flock::Tiny->write_pid($pid_file), "Pid file still locked after child exited";
+    ok locked($pid_file), "Pid file still locked after child exited";
 };
 
 done_testing;
