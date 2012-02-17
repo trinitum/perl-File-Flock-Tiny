@@ -133,13 +133,19 @@ subtest "PID file" => sub {
         $SIG{ALRM} = sub { exit 0 };
         alarm 10;
         my $lock = File::Flock::Tiny->write_pid($pid_file);
-        sleep 10;
+        sleep 5;
         exit 0;
     }
     usleep(200_000);
     ok !File::Flock::Tiny->write_pid($pid_file), "Pid file already exists and locked";
-    my $data = read_file($pid_file);
-    is $data, "$pid\n", "Pid file contains pid of the child process";
+
+    # Windows doesn't allow you to read the PID file while it is locked,
+    # so it doesn't actually makes much sense to write the PID into it
+    # in the first place.
+    unless ($^O eq 'MSWin32') {
+        my $data = read_file($pid_file);
+        is $data, "$pid\n", "Pid file contains pid of the child process";
+    }
     kill KILL => $pid;
     waitpid $pid, 0;
     my $lock = File::Flock::Tiny->write_pid($pid_file);

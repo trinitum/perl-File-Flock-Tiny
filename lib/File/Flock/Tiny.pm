@@ -26,7 +26,7 @@ $VERSION = eval $VERSION;
 
 Simple wrapper around L<flock> for ease of use.
 
-=head1 METHODS
+=head1 CLASS METHODS
 
 =cut
 
@@ -72,6 +72,7 @@ sub trylock {
 }
 
 =head2 File::Flock::Tiny->write_pid($file)
+X<write_pid>
 
 Try to lock the file and save the process ID into it. Returns the lock object,
 or undef if the file was already locked. The lock returned by I<write_pid> will
@@ -96,6 +97,8 @@ sub write_pid {
 package File::Flock::Tiny::Lock;
 use parent 'IO::Handle';
 use Fcntl qw(:flock);
+
+=head1 LOCK OBJECT METHODS
 
 =head2 $lock->release
 
@@ -153,6 +156,14 @@ __END__
 
 Pavel Shaydo, C<< <zwon at cpan.org> >>
 
+=head1 CAVEATS
+
+Different implementations of flock behave differently, code that uses this
+module may be non-portable, like any other code that uses flock.  See
+L<perlfunc/flock> for details.
+
+On windows you can not read the file while it is locked by another process,
+hence L</write_pid> doesn't make much sense.
 
 =head1 BUGS
 
