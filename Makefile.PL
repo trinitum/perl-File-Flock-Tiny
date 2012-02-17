@@ -12,7 +12,7 @@ bugtracker 'http://github.com/trinitum/perl-File-Flock-Tiny/issues';
 requires 'parent';
 build_requires 'Test::More';
 test_requires 'Path::Class';
-test_requires 'File::Slurp';
+test_requires 'File::Slurp' => 9999.14;
 
 auto_install;
 
