@@ -23,7 +23,7 @@ sub locked {
     my $fname = shift;
     my $tfile = $fname ? file($fname) : $file;
     if ($SOLARIS) {
-        system( $^X, "-e", "open my \$fh, '>>', '$file'; flock(\$fh, 6) ? exit 0:exit 1" );
+        system( $^X, "-e", "open my \$fh, '>>', '$tfile'; flock(\$fh, 6) ? exit 0:exit 1" );
         return $? ? 1 : 0;
     }
     else {
