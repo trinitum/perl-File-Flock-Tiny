@@ -1,3 +1,8 @@
+0.08 Fri Feb 17 2012 Pavel Shaydo <zwon@cpan.org>
+    * Fix test for Solaris (again)
+    * Fix write_pid test for Windows
+    * Document some caveats
+
 0.07 Thu Feb 16 2012 Pavel Shaydo <zwon@cpan.org>
     * Fix test for Solaris
 
