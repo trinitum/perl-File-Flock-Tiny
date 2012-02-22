@@ -10,7 +10,7 @@ repository 'git://github.com/trinitum/perl-File-Flock-Tiny';
 bugtracker 'http://github.com/trinitum/perl-File-Flock-Tiny/issues';
 
 requires 'parent';
-build_requires 'Test::More';
+build_requires 'Test::More' => 0.94;
 test_requires 'Path::Class';
 test_requires 'File::Slurp' => 9999.14;
 
