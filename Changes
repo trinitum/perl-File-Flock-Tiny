@@ -1,3 +1,6 @@
+0.10 Sat Feb 25 2012 Pavel Shaydo <zwon@cpan.org>
+    * Skip PID file subtest on Windows
+
 0.09 Wed Feb 22 2012 Pavel Shaydo <zwon@cpan.org>
     * Require Test::More 0.94
 
