@@ -1,3 +1,7 @@
+0.11 Thu Apr 12 2012 Pavel Shaydo <zwon@cpan.org>
+    * Get rid of Module::Install, I had a problem building a package
+      with dh-make-perl because of ExtUtils::MakeMaker dependency
+
 0.10 Sat Feb 25 2012 Pavel Shaydo <zwon@cpan.org>
     * Skip PID file subtest on Windows
 
