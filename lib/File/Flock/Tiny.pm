@@ -85,12 +85,7 @@ explicitely.
 sub write_pid {
     my ( $class, $file ) = @_;
     my $lock = $class->trylock($file);
-    if ($lock) {
-        $lock->truncate(0);
-        $lock->print("$$\n");
-        $lock->flush;
-        *$lock->{destroy_only_in} = $$;
-    }
+    $lock->write_pid if $lock;
     return $lock;
 }
 
@@ -99,6 +94,24 @@ use parent 'IO::Handle';
 use Fcntl qw(:flock);
 
 =head1 LOCK OBJECT METHODS
+
+=head2 $lock->write_pid
+
+Truncates locked file and saves PID into it. Also marks the lock object as tied
+to the current process, so it only will be automatically released when goes out
+of scope in the current process but not in any of the child processes created
+after this call.
+
+=cut
+
+sub write_pid {
+    my $lock = shift;
+    $lock->truncate(0);
+    $lock->print("$$\n");
+    $lock->flush;
+    *$lock->{destroy_only_in} = $$;
+    return;
+}
 
 =head2 $lock->release
 
@@ -132,7 +145,8 @@ demonstrates the use for this method:
     {
         my $lock = File::Flock::Tiny->lock("lockfile");
         my $pid = fork;
-        unless ( defined $pid ) {
+        if( $pid == 0 ) {
+            # We are in child process
             do_something();
         }
         $lock->close;
