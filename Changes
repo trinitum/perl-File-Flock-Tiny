@@ -1,3 +1,6 @@
+0.12 Thu Sep 20 2012 Pavel Shaydo <zwon@cpan.org>
+    * add write_pid method to the lock object
+
 0.11 Thu Apr 12 2012 Pavel Shaydo <zwon@cpan.org>
     * Get rid of Module::Install, I had a problem building a package
       with dh-make-perl because of ExtUtils::MakeMaker dependency
