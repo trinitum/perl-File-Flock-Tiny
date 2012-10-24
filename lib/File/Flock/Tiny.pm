@@ -59,8 +59,8 @@ sub lock {
 
 =head2 File::Flock::Tiny->trylock($file)
 
-Same as I<lock>, but if the I<$file> has been already locked, immediately
-returns undef.
+Same as I<lock>, but doesn't block and returns immediately, if the lock can not
+be acquired returns undef.
 
 =cut
 
@@ -72,7 +72,6 @@ sub trylock {
 }
 
 =head2 File::Flock::Tiny->write_pid($file)
-X<write_pid>
 
 Try to lock the file and save the process ID into it. Returns the lock object,
 or undef if the file was already locked. The lock returned by I<write_pid> will
@@ -94,6 +93,8 @@ use parent 'IO::Handle';
 use Fcntl qw(:flock);
 
 =head1 LOCK OBJECT METHODS
+
+Here is the list of methods that you can invoke on a lock object.
 
 =head2 $lock->write_pid
 
@@ -141,7 +142,7 @@ sub write_pid {
 
 =head2 $lock->release
 
-Unlock file
+Release lock and close the file
 
 =cut
 
