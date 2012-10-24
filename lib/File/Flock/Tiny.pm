@@ -100,7 +100,33 @@ use Fcntl qw(:flock);
 Truncates locked file and saves PID into it. Also marks the lock object as tied
 to the current process, so it only will be automatically released when goes out
 of scope in the current process but not in any of the child processes created
-after this call.
+after this call. This method may be used to create pid files for daemons, you
+can lock file in parent process to ensure that there is no another copy of the
+daemon running already, and then fork and write pid of the child into the file.
+Here is the simplified example of daemonizing code:
+
+    my $pid = File::Flock::Tiny->trylock('daemon.pid')
+      or die "Daemon already running";
+    if ( fork == 0 ) {
+        setsid;
+        if (fork) {
+            # intermediate process
+            $pid->close;
+            exit 0;
+        }
+    }
+    else {
+        # parent process
+        $pid->close;
+        exit 0;
+    }
+    # daemon process
+    # perhaps you want to close all opened files here, do not close $pid!
+    $pid->write_pid;
+
+It is importand to remember to close the lock file in the parent and
+intermediate processes, otherwise the lock will be released during destruction
+of the variable.
 
 =cut
 
