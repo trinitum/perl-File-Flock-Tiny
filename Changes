@@ -1,3 +1,7 @@
+0.13 Wed Oct 24 2012 Pavel Shaydo <zwon@cpan.org>
+    * improve documentation
+    * move author tests to xt/
+
 0.12 Thu Sep 20 2012 Pavel Shaydo <zwon@cpan.org>
     * add write_pid method to the lock object
 
