@@ -29,6 +29,6 @@ WriteMakefile(
             repository => 'git://github.com/trinitum/perl-File-Flock-Tiny',
             license    => 'http://dev.perl.org/licenses/',
         },
-        keywords => [ 'flock', 'pid file', 'lock file', ],
+        keywords => [ 'flock', 'pid', 'lock', 'file', ],
     },
 );
