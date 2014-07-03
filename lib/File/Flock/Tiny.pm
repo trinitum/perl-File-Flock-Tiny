@@ -24,7 +24,7 @@ $VERSION = eval $VERSION;
 
 =head1 DESCRIPTION
 
-Simple wrapper around L<flock> for ease of use.
+Simple wrapper around L<flock|perldoc/flock> for ease of use.
 
 =head1 CLASS METHODS
 
@@ -72,6 +72,7 @@ sub trylock {
 }
 
 =head2 File::Flock::Tiny->write_pid($file)
+X<write_pid>
 
 Try to lock the file and save the process ID into it. Returns the lock object,
 or undef if the file was already locked. The lock returned by I<write_pid> will
@@ -185,7 +186,7 @@ demonstrates the use for this method:
 Note, that this behaviour is not portable! It works on Linux and BSD, but on
 Solaris locks are not inherited by child processes, so the file will be
 unlocked as soon as the parent process will close it. See also description of
-flock in L<perlfunc>.
+L<flock|perlfunc/flock>.
 
 =cut
 
